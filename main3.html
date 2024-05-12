@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>应急能源发电车</title>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=5Y0qP8RU5y196x7qsBzvttdirQEqz2YG"></script>
+
+
+
+
+    <style type="text/css">
+        #container1 {
+            height: 600px;
+            width: 850px;
+            z-index: 0px;
+            position: relative;
+            top: -30px;
+
+        }
+
+        /*容器地图的宽高  */
+    </style>
+    <style>
+        /* 网页占据浏览器的全部高度 */
+        html,
+
+        /* 重置body内外边距,将内容按列布局 */
+        body {
+            /* 设置布局 */
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 设置导航栏样式 */
+        .top {
+            /* 设置布局方式 */
+            display: flex;
+            justify-content: center;
+
+            /* 盒子大小、颜色 */
+            width: 100%;
+            height: 40px;
+            color: #C4C4C4;
+            font-size: 12px;
+            background-color: #333333;
+        }
+
+        /* 为top中的段落布局 */
+        .top p {
+            margin-right: 15%;
+            position: relative;
+            right: 150px;
+
+        }
+
+        /* 设置列表的布局方式 */
+        ul {
+            display: flex;
+            position: relative;
+            left: 220px;
+        }
+
+        /* 取消原点、添加边框 */
+        ul li {
+            list-style-type: none;
+            border-right: 1px solid #C4C4C4;
+        }
+
+        /* 取消最后一个元素的边框 */
+        ul li:last-child {
+            border-right: none;
+        }
+
+        /* 设置a元素样式 */
+        ul a {
+            color: #c4c4c4;
+            text-decoration: none;
+            padding: 0 20px;
+        }
+
+        .footer {
+            width: 100%;
+            height: 40px;
+            background-color: #333333;
+            color: #C4C4C4;
+            font-size: 12px;
+            text-align: center;
+            line-height: 40px;
+            /* margin-top: 20px; */
+        }
+
+        .shop {
+            /* 商城占据页面的所有空间 */
+            flex: auto;
+            /* 设置商城区域的宽度、并居中显示 */
+            width: 1100px;
+            margin: auto;
+        }
+
+        /* 商城头部样式 */
+        .header {
+            /* 设置布局 */
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 25px;
+            border-radius: 0 0 8px 8px;
+            position: sticky;
+            top: 10px;
+        }
+
+        /* 设置表单样式 */
+        .search form {
+            display: flex;
+            border: 2px solid aqua;
+            border-radius: 26px;
+            width: 300px;
+            height: 26px;
+            position: relative;
+            bottom: 57px;
+            left: 55px;
+        }
+
+        /* 取消input的默认边框 */
+        .header input {
+            border: none;
+            border-radius: 26px;
+            font-size: 13px;
+        }
+
+        /* 设置输入框样式 */
+        .header input[type="text"] {
+            width: 80%;
+            margin: 0 0px;
+        }
+
+        /* 设置按钮样式 */
+        .header input[type="submit"] {
+            /* 设置大小与颜色 */
+            background-color: aqua;
+            color: black;
+            width: 20%;
+        }
+
+        /* 整体样式 */
+        .banner {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* 横幅广告大小 */
+        .ad {
+            width: 80%;
+            height: 311px;
+        }
+
+        /* 菜单样式 */
+        .menu {
+            width: 20%;
+            height: 311px;
+            background-color: #2F5DF2;
+        }
+
+        .menu p,
+        .menu a {
+            text-decoration: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 12px;
+            padding: 4px 0;
+        }
+
+        .menu a:hover {
+            color: yellow;
+            cursor: pointer;
+        }
+
+        /* 商品区 */
+        .goods_title {
+            font-size: 27px;
+            color: aqua;
+            position: relative;
+            bottom: 1245px;
+            left: 905px;
+        }
+
+        /* 对container类设置样式，要求：
+            1、设置宽度为100%；
+            2、设置布局方式为弹性盒子；
+            3、设置盒子中的内容两边对齐。
+          */
+        .container {
+            height: 100%;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+            bottom: 1250px;
+            left: 860px;
+            border-color: black;
+
+        }
+
+        .item img {
+            padding: 10px 0;
+        }
+
+        .name {
+            color: white;
+            background: none;
+            text-decoration: none;
+        }
+
+        .info {
+            color: #787878;
+        }
+
+        .price {
+            color: #E92845;
+            font-weight: 500;
+        }
+
+        /* 对item类设置样式，要求：
+            1、文字大小为12px且居中显示；
+            2、背景颜色为#FFFFFF；
+            3、所有样式添加一个0.3s的过渡时间。
+          */
+        .item {
+            font-size: 21px;
+            height: 47px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            left: 15px;
+            display: inline-block;
+            margin-bottom: 15px;
+            border-bottom: 2px solid aqua;
+
+        }
+
+        /* 对item类的hover状态设置样式，要求：
+            1、设置圆角12px
+            2、设置鼠标样式为pointer
+            3、设置阴影为0 19px 39px 0 #999999；
+            4、使用转换函数让盒子向上移动4px（左右不变为0）。
+        */
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #333333;
+            min-width: 170px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            padding: 12px 16px;
+            z-index: 1;
+            font-size: 20px;
+            margin-left: 25px;
+            color: #FFFFFF;
+        }
+
+        .dropdown-content a {
+            color: #2F5DF2;
+        }
+
+        .item:hover .dropdown-content {
+            display: block;
+            border-radius: 12px;
+            cursor: pointer;
+
+
+        }
+    </style>
+    <script>
+        function show() {
+            var show_part = document.querySelector('.part');
+            show_part.style.display = 'block';
+        }
+
+        function hide() {
+            var show_part = document.querySelector('.part');
+            show_part.style.display = 'none';
+        }
+        function myfunction1() {
+            var show_part = document.querySelector('.message1');
+            show_part.style.display = 'block';
+        }
+        function myfunction6() {
+            var show_part = document.querySelector('.message1');
+            show_part.style.display = 'none';
+        }
+        function myfunction2() {
+            var show_part = document.querySelector('.message2');
+            show_part.style.display = 'block';
+        }
+        function myfunction7() {
+            var show_part = document.querySelector('.message2');
+            show_part.style.display = 'none';
+        }
+        function myfunction3() {
+            var show_part = document.querySelector('.message3');
+            show_part.style.display = 'block';
+        }
+        function myfunction8() {
+            var show_part = document.querySelector('.message3');
+            show_part.style.display = 'none';
+        }
+        function myfunction4() {
+            var show_part = document.querySelector('.message4');
+            show_part.style.display = 'block';
+        }
+        function myfunction9() {
+            var show_part = document.querySelector('.message4');
+            show_part.style.display = 'none';
+        }
+        function myfunction5() {
+            var show_part = document.querySelector('.message5');
+            show_part.style.display = 'block';
+        }
+        function myfunction10() {
+            var show_part = document.querySelector('.message5');
+            show_part.style.display = 'none';
+        }
+
+    </script>
+    <style>
+        .whole {
+            background-color: blue;
+            height: 500px;
+            width: 500px;
+        }
+
+        .part {
+            display: none;
+            background-image: url(.//images/c8e5f7f5_E711958_f346ec62.jpg);
+            height: 605px;
+            width: 1210px;
+            position: fixed;
+            bottom: 10px;
+            left: 150px;
+            border-radius: 5px;
+
+        }
+
+        .part1 {
+            height: 294px;
+            width: 595px;
+            border: 3px solid white;
+            border-radius: 10px 0px 0px 0px;
+            position: relative;
+            bottom: 9px;
+            
+            border-bottom:none;
+
+
+        }
+
+        .part2 {
+            height: 295px;
+            width: 605px;
+            border: 3px solid white;
+            border-radius: 0px 10px 0px 0px;
+            position: relative;
+            left: 600px;
+            bottom: 305px;
+            border-left:none;
+            border-bottom:none;
+
+        }
+
+        .part3 {
+            height: 310px;
+            width: 1202px;
+            border: 3px solid white;
+            border-radius: 0px 0px 10px 10px;
+            position: relative;
+            bottom: 310px;
+        }
+
+        .part1 p,
+        .part2 p,
+        .part3 p {
+            font-size: 26px;
+            color: aqua;
+            position: relative;
+            left: 10px;
+            bottom: 15px;
+            
+        }
+
+        .part11,
+        .part21,
+        .part31 {
+            height: 80px;
+            width: 200px;
+            border: 2px solid aqua;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            bottom: 40px;
+            left: 50px;
+        }
+
+        .part111,
+        .part211,
+        .part311 {
+            font-size: 30px;
+            color: white;
+            position: relative;
+            top: 10px;
+        }
+
+        .part112 {
+            font-size: 15px;
+            color: aqua;
+            position: relative;
+            bottom: 10px;
+        }
+
+        .part12,
+        .part22 {
+            height: 80px;
+            width: 200px;
+            border: 2px solid aqua;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            bottom: 20px;
+            left: 50px;
+        }
+
+        .part121,
+        .part221,
+        .part321,
+        .part331,
+        .part341,
+        .part351 {
+            font-size: 30px;
+            color: white;
+            position: relative;
+            top: 10px;
+        }
+
+        .part122,
+        .part222,
+        .part322,
+        .part332,
+        .part342,
+        .part352 {
+            font-size: 15px;
+            color: aqua;
+            position: relative;
+            top: 10px;
+
+        }
+
+        .part212,
+        .part312 {
+            font-size: 15px;
+            color: aqua;
+            position: relative;
+            top: 10px;
+        }
+
+        .part32 {
+            height: 80px;
+            width: 200px;
+            border: 2px solid aqua;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            bottom: 160px;
+            left: 500px;
+        }
+
+        .part33 {
+            height: 80px;
+            width: 200px;
+            border: 2px solid aqua;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            bottom: 161px;
+            left: 500px;
+        }
+
+        .part34 {
+            height: 80px;
+            width: 200px;
+            border: 2px solid aqua;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            bottom: 327px;
+            left: 950px;
+        }
+
+        .part35 {
+            height: 80px;
+            width: 200px;
+            border: 2px solid aqua;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            bottom: 328px;
+            left: 950px;
+        }
+
+        .part p {
+            color: white;
+            font-size:26px;
+        }
+
+        .hide {
+            font-size: 30px;
+            position: relative;
+            left: 1180px;
+            bottom: 920px;
+            color: white;
+        }
+
+        .img1 {
+            position: relative;
+            bottom: 250px;
+            left: 255px;
+        }
+
+        .img2 {
+            position: relative;
+            bottom: 255px;
+            left: 260px;
+        }
+
+        .img3 {
+
+            object-fit: cover;
+            z-index: 100px;
+
+            position: relative;
+            bottom: 340px;
+            left: 155px;
+
+        }
+
+        .title1 {
+            height: 50px;
+            font-size: 28px;
+            position: relative;
+            top: 10px;
+            left: 400px;
+            color: aqua;
+
+        }
+
+        .border1 {
+            height: 595px;
+            width: 300px;
+            border: 2px solid white;
+
+            border-left: none;
+            position: relative;
+            left: 850px;
+            bottom: 630px;
+            background-color: #333333;
+        }
+
+        .backimg {
+            position: relative;
+            top: 865px;
+        }
+
+        .body {
+            position: relative;
+            bottom: 870px;
+        }
+
+        .name:first-child {
+            position: relative;
+            top: 2px;
+        }
+
+        .item:nth-child(5) {
+            border-bottom: none;
+        }
+
+        .border2 {
+            height: 5px;
+            width: 300px;
+            border-top: 3px solid white;
+            position: relative;
+            right: 10px;
+            bottom: 15px;
+        }
+
+        .title2 {
+            position: relative;
+            font-size: 26px;
+            color: aqua;
+            bottom: 35px;
+            left: 85px;
+        }
+
+        .message1,.message2,.message3,.message4,.message5 {
+            display:none;
+            font-size: 21px;
+            color: white;
+            position: fixed;
+            bottom: 45px;
+            left:1097px;
+            text-align:center;
+            background-color: #333333;
+        }
+        .message1 a,.message2 a,.message3 a,.message4 a,.message5 a {
+            color:aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <!--导航栏-->
+
+    <div class="top">
+        <p>应急电源车优化调度能源管理系统</p>
+        <ul>
+
+            <li><a
+                    href="./simple.html">负荷案例</a>
+            </li>
+            <li><a href="#">系统流程图</a></li>
+            <li><a href="#">个人中心</a></li>
+            <li><a href="#">帮助中心</a></li>
+        </ul>
+    </div>
+    <div class="body">
+        <div class="backimg"><img src=".//images/VCG41N1351243538.jpg" alt="" width="1470px" height="870px"></div>
+        <div class="title1"><B>应急电源车优化调度能源管理系统</B></div>
+
+        <!-- 商品内容 -->
+        <div class="shop">
+            <!--搜索栏-->
+            <div class="header">
+                <!-- LOGO -->
+                <div class="logo">
+
+                </div>
+                <!-- 搜索栏 -->
+                <div class="search">
+                    <form action="#">
+                        <input type="text" placeholder="请输入搜索内容">
+                        <input type="submit" value="搜一搜">
+                    </form>
+                </div>
+            </div>
+
+
+
+            <!-- 分类与横幅广告  -->
+            <div id="container1"></div>
+
+            <!-- 存放地图的容器 -->
+
+            <script type="text/javascript">
+
+                var map = new BMapGL.Map("container1");
+    
+                // 创建地图实例
+    
+                var point = new BMapGL.Point(112.993338,28.2607);
+                map.centerAndZoom(point, 14);
+                var point1 = new BMapGL.Point(112.925211, 28.232953);
+                var point2 = new BMapGL.Point(113.021222, 28.116282);
+                var point3 = new BMapGL.Point(112.9965, 28.2579);
+                var point4 = new BMapGL.Point(112.939584, 28.145334);
+                var point5 = new BMapGL.Point(113.024671, 28.203415);
+    
+                // 创建Marker标注，使用小车图标
+    
+    
+    
+                
+                var marker3 = new BMapGL.Marker(new BMapGL.Point(112.9965, 28.2579));
+                
+                // 在地图上添加点标记
+                
+                map.addOverlay(marker3);
+                
+                var opts1 = {
+                    width: 100,
+                    height: 100,
+                    title: '应急车1 湘A8888'
+                };
+                var opts2 = {
+                    width: 100,
+                    height: 100,
+                    title: '应急车2 湘A6666'
+                };
+                var opts3 = {
+                    width: 100,
+                    height: 100,
+                    title: '应急车3 湘A0000'
+                };
+                var opts4 = {
+                    width: 100,
+                    height: 100,
+                    title: '应急车4 湘A2222'
+                };
+                var opts5 = {
+                    width: 100,
+                    height: 100,
+                    title: '应急车5 湘A9999'
+                };
+    
+                
+                var infoWindow3 = new BMapGL.InfoWindow('车辆状态：空闲<br>车储能量：90%<br>当前位置：湖南省长沙市开福区福元西路', opts3);
+                marker3.addEventListener('click', function () {
+                    map.openInfoWindow(infoWindow3, point3); // 开启信息窗口
+                });
+                var infoWindow4 = new BMapGL.InfoWindow('车辆状态：空闲<br>车储能量：75%<br>当前位置：湖南省长沙市岳麓区罗家嘴立交桥', opts4);
+                marker4.addEventListener('click', function () {
+                    map.openInfoWindow(infoWindow4, point4); // 开启信息窗口
+                });
+                var infoWindow5 = new BMapGL.InfoWindow('车辆状态：充电<br>车储能量：95%<br>当前位置：湖南省长沙市芙蓉区远大一路266', opts5);
+                // 点标记添加点击事件
+    
+                marker5.addEventListener('click', function () {
+                    map.openInfoWindow(infoWindow5, point5); // 开启信息窗口
+                });
+                map.enableScrollWheelZoom(true);
+                
+            </script>
+    
+    
+    
+
+
+
+            <!-- 新品首发 -->
+            <div class="border1"></div>
+            <div class="goods">
+                <p class="goods_title"><B>可调度应急车辆</B></p>
+                <div class="container">
+                    <div class="item">
+                        <a onClick="myfunction1();myfunction7();myfunction8();myfunction9();myfunction10()" class="name" href="#">应急车1&nbsp;&nbsp;&nbsp;&nbsp;湘A8888</a>
+
+                        <div class="dropdown-content">
+                            <p>车辆状态：充电</p>
+                            <p>车储能量：30%</p>
+                            <a href="./main1.html"
+                                target="_self">定位
+                                
+                            </a>
+                            <a onClick="show()" href="#">设备检测</a>
+                        </div>
+
+
+
+                    </div>
+                    <div class="item">
+
+                        <a onClick="myfunction2();myfunction6();myfunction8();myfunction9();myfunction10();" class="name" href="#">应急车2&nbsp;&nbsp;&nbsp;&nbsp;湘A6666</a>
+
+                        <div class="dropdown-content">
+                            <p>车辆状态：放电</p>
+                            <p>车储能量：80%</p>
+                            <a href="./main2.html"
+                                target="_self">定位</a>
+                            <a onClick="show()" href="#">设备检测</a>
+                        </div>
+
+
+
+
+
+                    </div>
+                    <div class="item">
+
+                        <a onClick="myfunction3();myfunction6();myfunction7();myfunction9();myfunction10()" class="name" href="#">应急车3&nbsp;&nbsp;&nbsp;&nbsp;湘A0000</a>
+                        <div class="dropdown-content">
+                            <p>车辆状态：空闲</p>
+                            <p>车储能量：90%</p>
+                            <a href="./main3.html"
+                                target="_self">定位<script>map.openInfoWindow(infoWindow3, point3)</script></a>
+                            <a onClick="show()" href="#">设备检测</a>
+                        </div>
+
+
+
+                    </div>
+                    <div class="item">
+                        <a onClick="myfunction4();myfunction6();myfunction7();myfunction8();myfunction10()" class="name" href="#">应急车4&nbsp;&nbsp;&nbsp;&nbsp;湘A2222</a>
+
+                        <div class="dropdown-content">
+                            <p>车辆状态：空闲</p>
+                            <p>车储能量：75%</p>
+                            <a href="./main4.html"
+                                target="_self">定位</a>
+                            <a onClick="show()" href="#">设备检测</a>
+
+
+                        </div>
+                    </div>
+                    <div class="item">
+                        <a onClick="myfunction5();myfunction6();myfunction7();myfunction8();myfunction9()" class="name" href="#">应急车5&nbsp;&nbsp;&nbsp;&nbsp;湘A9999</a>
+
+                        <div class="dropdown-content">
+                            <p>车辆状态：充电</p>
+                            <p>车储能量：95%</p>
+                            <a href="./main5.html"
+                                target="_self">定位</a>
+                            <a onClick="show()" href="#">设备检测</a>
+                        </div>
+                    </div>
+                    <div class="border2"></div>
+                    <p class="title2"><B>车辆信息</B></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="message1">
+        <p>车辆状态：&nbsp;&nbsp;&nbsp;充电</p>
+        <p>车储能量：&nbsp;&nbsp;&nbsp;30%</p>
+        <a href="./main1.html" target="_self">定位
+        </a>&nbsp;&nbsp;
+        <a onClick="show()" href="#">设备检测</a>
+    </div>
+    <div class="message2">
+        <p>车辆状态：&nbsp;&nbsp;&nbsp;放电</p>
+        <p>车储能量：&nbsp;&nbsp;&nbsp;80%</p>
+        <a href="./main2.html" target="_self">定位
+        </a>&nbsp;&nbsp;
+        <a onClick="show()" href="#">设备检测</a>
+    </div>
+    <div class="message3">
+        <p>车辆状态：&nbsp;&nbsp;&nbsp;空闲</p>
+        <p>车储能量：&nbsp;&nbsp;&nbsp;90%</p>
+        <a href="./main3.html" target="_self">定位
+        </a>&nbsp;&nbsp;
+        <a onClick="show()" href="#">设备检测</a>
+    </div>
+    <div class="message4">
+        <p>车辆状态：&nbsp;&nbsp;&nbsp;空闲</p>
+        <p>车储能量：&nbsp;&nbsp;&nbsp;75%</p>
+        <a href="./main4.html" target="_self">定位
+        </a>&nbsp;&nbsp;
+        <a onClick="show()" href="#">设备检测</a>
+    </div>
+    <div class="message5">
+        <p>车辆状态：&nbsp;&nbsp;&nbsp;充电</p>
+        <p>车储能量：&nbsp;&nbsp;&nbsp;95%</p>
+        <a href="./main5.html" target="_self">定位
+        </a>&nbsp;&nbsp;
+        <a onClick="show()" href="#">设备检测</a>
+    </div>
+
+    <div class="part">
+        <div class="part1">
+            <p><B>光伏</B></p>
+            <div class="part11">
+                <div class="part111">8.3kwh</div><br>
+                <div class="part112">光伏总容量</div>
+            </div>
+            <div class="part12">
+                <div class="part121">0.0kwh</div>
+                <div class="part122">今日发电量</div>
+            </div>
+            <div class="img1"><img src=".//images/img1.png" alt="发电量日趋势图"></div>
+        </div>
+        <div class="part2">
+            <p><B>水轮</B></p>
+            <div class="part21">
+                <div class="part211">30.0kwh</div>
+                <div class="part212">水轮总容量</div>
+            </div>
+            <div class="part22">
+                <div class="part221">0.0kwh</div>
+                <div class="part222">今日发电量</div>
+            </div>
+            <div class="img2"><img src=".//images/img2.png" alt="发电量日趋势图"></div>
+        </div>
+        <div class="part3">
+            <p><B>储能效益</B></p>
+            <div class="part31">
+                <div class="part311">100.0kwh</div>
+                <div class="part312">储能总容量</div>
+            </div>
+            <div class="part32">
+                <div class="part321">0.0kwh</div>
+                <div class="part322">今日放电量</div>
+            </div>
+            <div class="part33">
+                <div class="part331">0.0kwh</div>
+                <div class="part332">今日充电量</div>
+            </div>
+            <div class="part34">
+                <div class="part341">0h</div>
+                <div class="part342">今日充电时间</div>
+            </div>
+            <div class="part35">
+                <div class="part351">0h</div>
+                <div class="part352">今日放电时间</div>
+            </div>
+            <div class="img3"><img src=".//images/img3.png" alt="实时充放电图" height="170px"></div>
+        </div>
+        <a onClick="hide()" class="hide">×</a>
+        <div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">Copyright@应急能源发电车</div>
+</body>
+<script>myfunction3()</script>
+</html>
+
+
